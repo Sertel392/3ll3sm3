@@ -1,264 +1,123 @@
-package com.mycloudstream.plugins // Paket adını genel bir isme çevirdim
-
-import com.lagradost.cloudstream3.*
-import com.lagradost.cloudstream3.utils.ExtractorApiKt
-import com.lagradost.cloudstream3.utils.ExtractorLink
-import com.lagradost.nicehttp.Requests
-import kotlinx.coroutines.delay
-import okhttp3.Interceptor
-import okhttp3.RequestBody // Bu import, POST isteği için gereklidir
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
-import kotlin.coroutines.Continuation
-import kotlin.jvm.functions.Function1
-import kotlin.text.Regex
-import kotlin.text.StringsKt // trim ve substringBeforeLast için gerekli
-
-// Metadata, Cloudstream'in eklentiyi tanımasını sağlar.
-@Suppress("unused") // Kullanılmayan uyarıları bastırmak için
-class FourKFilmIzleseneAPI : MainAPI() {
-
-    // Eklentinin ana URL'si. Kullanıcının istediği siteye güncellendi.
-    override var mainUrl = "https://www.4kfilmizlesene.nl"
-    // Eklentinin adı. Uygulamada bu isimle görünecek.
-    override var name = "4KFilmIzlesene"
-    // Eklentinin desteklediği diller. Türkçe olarak belirlendi.
-    override var lang = "tr"
-    // Eklentinin ana sayfası olup olmadığı. True olarak belirlendi.
-    override val hasMainPage = true
-    // Hızlı arama desteği olup olmadığı. Şimdilik false bırakıldı, search metodu kullanılıyor.
-    override val hasQuickSearch = false
-    // Eklentinin desteklediği TV tipleri. Sadece Film (Movie) olarak belirlendi.
-    override val supportedTypes = setOf(TvType.Movie)
-
-    // Ana sayfa verilerini oluşturan fonksiyon.
-    // Cloudstream'in ana sayfasında hangi kategorilerin gösterileceğini belirler.
-    // Film türlerine göre farklı URL'ler tanımlanmıştır.
-    override val mainPage = mainPageOf(
-        Pair("$mainUrl/yabanci-filmler-izle/page/", "Yabancı Filmler"),
-        Pair("$mainUrl/turkce-dublaj-film-izle/page/", "Türkçe Dublaj Filmler"),
-        Pair("$mainUrl/altyazili-filmler-izle/page/", "Altyazılı Filmler"),
-        Pair("$mainUrl/aksiyon-filmleri-izle/page/", "Aksiyon Filmleri"),
-        Pair("$mainUrl/gerilim-filmleri-izle/page/", "Gerilim Filmleri"),
-        Pair("$mainUrl/aile-filmleri-izle/page/", "Aile Filmleri"), // Fazla '/' işareti kaldırıldı
-        Pair("$mainUrl/animasyon-filmleri-izle/page/", "Animasyon Filmleri"),
-        Pair("$mainUrl/dram/page/", "Dram Filmleri"),
-        Pair("$mainUrl/romantik-filmler-izle/page/", "Romantik Filmleri"),
-        Pair("$mainUrl/bilim-kurgu-filmleri-izle/page/", "Bilim Kurgu Filmleri")
-    )
-
-    /**
-     * Başlıklardaki "(YIL)" gibi tarih bilgilerini temizler.
-     * Örneğin: "Film Adı (2023)" -> "Film Adı"
-     */
-    private fun removeDateFromTitle(title: String?): String? {
-        // Eğer başlık null ise null döner.
-        return title?.substringBeforeLast("(", "")?.trim()
+[
+        {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=fullporner.com&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/nikyokki/nik-cloudstream",
+        "fileSize": 12287,
+        "status": 1,
+        "language": "en",
+        "authors": [
+            "coxju",
+            "SaurabhKaperwan"
+        ],
+        "tvTypes": [
+            "NSFW"
+        ],
+        "version": 4,
+        "internalName": "FullPorner",
+        "description": "(VPN) FullPorner is the best free full length porn video site. Choose from millions of hardcore videos that stream quickly and in high quality and only full length",
+        "url": "https://raw.githubusercontent.com/nikyokki/nik-cloudstream/builds/FullPorner.cs3",
+        "name": "FullPorner"
+    },
+        {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=hqporner.com&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/nikyokki/nik-cloudstream",
+        "fileSize": 17213,
+        "status": 1,
+        "language": "en",
+        "authors": [
+            "keyiflerolsun",
+            "nikyokki"
+        ],
+        "tvTypes": [
+            "NSFW"
+        ],
+        "version": 4,
+        "internalName": "HQPorner",
+        "description": "Truly high definition porn videos and truly for free! We're sure you'll like our best collection containing thousands of 4K, 60FPS and 1080p free HD porn videos with the hottest girls ever!",
+        "url": "https://raw.githubusercontent.com/nikyokki/nik-cloudstream/builds/HQPorner.cs3",
+        "name": "HQPorner"
+    },
+     {
+        "iconUrl": "https://cdn1.iconfinder.com/data/icons/nsfw-1/64/tv-adult-content-porn-512.png",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/nikyokki/nik-cloudstream",
+        "fileSize": 14005,
+        "status": 1,
+        "language": "ru",
+        "authors": [
+            "keyiflerolsun",
+            "nikyokki"
+        ],
+        "tvTypes": [
+            "NSFW",
+            "Live"
+        ],
+        "version": 2,
+        "internalName": "OxAx",
+        "description": "(VPN) \u041e\u0425-\u0410\u0425.\u0422\u0412 - \u0441\u0430\u0439\u0442 \u0434\u043b\u044f \u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0430 \u0432\u0437\u0440\u043e\u0441\u043b\u044b\u0445 \u0422\u0412 \u043e\u043d\u043b\u0430\u0439\u043d \u0431\u0435\u0437 \u043a\u0430\u043a\u0438\u0445 \u043b\u0438\u0431\u043e \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u0439. \u0421\u043c\u043e\u0442\u0440\u0438\u0442\u0435 \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e \u043d\u0430 \u043c\u043e\u0431\u0438\u043b\u044c\u043d\u044b\u0445 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430\u0445 iPad, iPhone \u0438 Android.",
+        "url": "https://raw.githubusercontent.com/nikyokki/nik-cloudstream/builds/OxAx.cs3",
+        "name": "OxAx"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=pornhub.com&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/nikyokki/nik-cloudstream",
+        "fileSize": 11465,
+        "status": 1,
+        "language": "en",
+        "authors": [
+            "keyiflerolsun",
+            "nikyokki"
+        ],
+        "tvTypes": [
+            "NSFW"
+        ],
+        "version": 2,
+        "internalName": "PornHub",
+        "description": "(VPN) Pornhub is the world\u2019s leading free porn site. Choose from millions of hardcore videos that stream quickly and in high quality, including amazing VR Porn. The largest adult site on the Internet just keeps getting better. We have more pornstars and real amateurs than anyone else. It\u2019s fast, it\u2019s free, it\u2019s Pornhub!",
+        "url": "https://raw.githubusercontent.com/nikyokki/nik-cloudstream/builds/PornHub.cs3",
+        "name": "PornHub"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=spankbang.com&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/nikyokki/nik-cloudstream",
+        "fileSize": 12167,
+        "status": 1,
+        "language": "en",
+        "authors": [
+            "coxju",
+            "keyiflerolsun",
+            "nikyokki"
+        ],
+        "tvTypes": [
+            "NSFW"
+        ],
+        "version": 2,
+        "internalName": "SpankBang",
+        "description": "(VPN) SpankBang is the hottest free porn site in the world! Cum like never before and explore millions of fresh and free porn videos! Get lit on SpankBang!",
+        "url": "https://raw.githubusercontent.com/nikyokki/nik-cloudstream/builds/SpankBang.cs3",
+        "name": "SpankBang"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=xhamster.com&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/nikyokki/nik-cloudstream",
+        "fileSize": 10197,
+        "status": 1,
+        "language": "en",
+        "authors": [
+            "coxju"
+        ],
+        "tvTypes": [
+            "NSFW"
+        ],
+        "version": 2,
+        "internalName": "xHamster",
+        "description": "(VPN) 5 milyondan fazla Porno Videosunu \u00fccretsiz izleyin.",
+        "url": "https://raw.githubusercontent.com/nikyokki/nik-cloudstream/builds/xHamster.cs3",
+        "name": "xHamster"
     }
-
-    /**
-     * Ana sayfa verilerini çeken asenkron fonksiyon.
-     * Belirli bir sayfa numarasına göre filmleri getirir.
-     */
-    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        // HTTP isteği için ana uygulamayı (app) kullanırız.
-        // URL'i request.data (kategori URL'si) ve sayfa numarası ile oluştururuz.
-        val response = Requests.get(request.data + page)
-
-        // HTML içeriğini Jsoup ile parse ederiz.
-        val document = response.document
-
-        // ".entry-item" sınıfına sahip tüm makale öğelerini seçeriz.
-        val movies = document.select("article.entry-item").mapNotNull { element ->
-            // Poster URL'sini almak için ".entry-thumb img" içindeki "src" özniteliğini seçeriz.
-            val posterUrl = element.selectFirst(".entry-thumb img")?.attr("src")
-
-            // Film başlığını almak için ".entry-title a" içindeki metni seçeriz.
-            val title = element.selectFirst(".entry-title a")?.text()?.let {
-                removeDateFromTitle(it) // Başlıktaki tarihi temizleriz.
-            } ?: "" // Başlık null veya boşsa boş string atarız.
-
-            // Film URL'sini almak için ".entry-title a" içindeki "href" özniteliğini seçeriz.
-            val movieUrl = element.selectFirst(".entry-title a")?.attr("href") ?: ""
-
-            // Eğer başlık ve URL varsa MovieSearchResponse oluştururuz.
-            if (title.isNotEmpty() && movieUrl.isNotEmpty()) {
-                newMovieSearchResponse(
-                    name = title,
-                    url = movieUrl,
-                    type = TvType.Movie, // Film tipi
-                    posterUrl = posterUrl // Poster URL'si
-                )
-            } else {
-                null // Geçersiz öğeleri atlarız
-            }
-        }
-        // Ana sayfa yanıtını döndürür.
-        return HomePageResponse(request.name, movies)
-    }
-
-    /**
-     * Film veya dizi bilgilerini yükleyen asenkron fonksiyon.
-     * Film detay sayfasından başlık, açıklama, poster, fragman gibi bilgileri çeker.
-     */
-    override suspend fun load(url: String): LoadResponse {
-        // Film detay sayfasını çekeriz.
-        val response = Requests.get(url)
-        val document = response.document
-
-        // Film başlığını çeker ve tarihi temizleriz.
-        val title = document.selectFirst("div.film h1")?.text()?.trim() ?: ""
-
-        // Orijinal adı çekiyoruz
-        val originalName = document.selectFirst("div.original-name span")?.text()?.trim()
-        val fullTitle = if (!originalName.isNullOrEmpty()) {
-            "$title - $originalName"
-        } else {
-            title
-        }
-
-        // Film poster URL'sini çekeriz (data-lazy-src veya src).
-        val posterUrl = document.selectFirst("div.img img")?.attr("data-lazy-src")
-            ?: document.selectFirst("div.img img")?.attr("src")
-
-        // Film açıklamasını çekeriz.
-        val plot = document.selectFirst("div.description")?.text()?.trim()
-
-        // Yılı çekeriz.
-        val year = document.selectFirst("span[itemprop='dateCreated']")?.text()?.trim()?.toIntOrNull()
-
-        // Türleri (Tags) çekeriz.
-        val tags = document.select("div.category a[href*='-filmleri/']").map { it.text() }
-
-        // IMDb puanını çekeriz.
-        val rating = document.selectFirst("div.imdb-count")?.text()?.let {
-            // "8.5 / 10" gibi metinlerden "8.5" kısmını alıp tam sayıya çevirmeye çalışırız.
-            it.split(" ")[0].trim().toFloatOrNull()?.times(10)?.toInt() // 8.5 -> 85
-        }
-
-        // Oyuncuları çekeriz.
-        val actors = document.select("div.actors").map { it.text() }
-
-        // Fragman URL'sini iframe'den çekiyoruz
-        val trailerUrl = document.selectFirst("div.container iframe")?.attr("src")?.let { iframeSrc ->
-            // YouTube embed linkiyse, normal YouTube linkine çevir.
-            Regex("youtube\\.com/embed/([\\w-]+)").find(iframeSrc)?.groupValues?.get(1)?.let { "https://www.youtube.com/watch?v=$it" }
-                ?: iframeSrc // Eğer YouTube embed değilse orijinal iframe src'yi kullan
-        }
-
-
-        // newMovieLoadResponse ile yükleme yanıtını oluştururuz.
-        return newMovieLoadResponse(
-            name = fullTitle,
-            url = url,
-            type = TvType.Movie,
-            posterUrl = posterUrl,
-            plot = plot,
-            year = year,
-            tags = tags,
-            rating = rating,
-            actors = actors,
-            trailer = trailerUrl
-        )
-    }
-
-    /**
-     * Video bağlantılarını çeken asenkron fonksiyon.
-     * Bu fonksiyon, film sayfasındaki gömülü video oynatıcıları veya iframe'leri bulur
-     * ve ExtractorApiKt.loadExtractor kullanarak bunlardan doğrudan video linklerini çıkarmaya çalışır.
-     */
-    override suspend fun loadLinks(
-        data: String, // Genellikle embed URL'si veya film sayfasının kendi URL'si
-        isCasting: Boolean, // Cast işlemi yapılıp yapılmadığı
-        subtitleCallback: Function1<SubtitleFile, Unit>, // Altyazı dosyaları için geri çağırma
-        callback: Function1<ExtractorLink, Unit> // Çıkarılan video linkleri için geri çağırma
-    ): Boolean {
-        // Film sayfasını tekrar çekeriz.
-        val response = Requests.get(data)
-        val document = response.document
-
-        // ".amy-movie-serve-options span" sınıfına sahip tüm öğeleri seçeriz.
-        // Bu span'lerin 'data-source' özniteliğinde gömülü video URL'leri olabilir.
-        val sources = document.select(".amy-movie-serve-options span").mapNotNull { it.attr("data-source") }
-
-        // Alternatif olarak, iframe'leri de kontrol edebiliriz, çünkü birçok site video player'larını iframe içine yerleştirir.
-        val iframes = document.select("iframe").mapNotNull { it.attr("src") }
-
-        // Tüm potansiyel kaynakları birleştiririz.
-        val allSources = sources + iframes
-
-        // Her bir kaynağı ExtractorApiKt.loadExtractor ile işleriz.
-        // Bu, Cloudstream'in dahili extractor'larını kullanarak video linklerini otomatik olarak çıkarmaya çalışır.
-        for (sourceUrl in allSources) {
-            if (sourceUrl.isNotEmpty()) {
-                // Güvenli URL almak için MainAPIKt.fixUrl kullanın
-                val fixedUrl = fixUrl(sourceUrl)
-                if (fixedUrl.isNotEmpty()) {
-                    // loadExtractor, döndürdüğü boolean değeri ile başarılı olup olmadığını belirtir.
-                    // False dönerse, bir sonraki kaynağa geçeriz.
-                    ExtractorApiKt.loadExtractor(fixedUrl, subtitleCallback, callback)
-                    // Her bir extractor için biraz gecikme eklemek, sunucu tarafında bot korumalarını tetiklemeyi önleyebilir.
-                    delay(200) // 200 ms gecikme
-                }
-            }
-        }
-        return true // En az bir bağlantı yüklemeye çalışıldığı için true döneriz.
-    }
-
-    /**
-     * Uygulama içi arama işlevi.
-     * Ajax isteği kullanarak arama yapar ve sonuçları döndürür.
-     */
-    override suspend fun search(query: String): List<SearchResponse> {
-        // Arama için gerekli ajax_nonce değerini ana sayfadan çekeriz.
-        // Bu kısım AJAX aramaları için gereklidir.
-        val mainPageResponse = Requests.get(mainUrl)
-        val mainPageBody = mainPageResponse.body.string()
-
-        // ajax_nonce değerini bir regex ile buluruz.
-        val ajaxNonce = Regex("\"ajax_nonce\"\\s*:\\s*\"([a-fA-F0-9]+)\"").find(mainPageBody)?.groupValues?.get(1) ?: ""
-
-        // Arama için POST isteği göndeririz.
-        val searchResponse = Requests.post(
-            url = "$mainUrl/wp-admin/admin-ajax.php",
-            data = mapOf(
-                "s" to query,
-                "id" to "6944", // Bu ID siteye özgü olabilir, sitenin yapısı değişirse sorun çıkarabilir.
-                "post_type" to "amy_movie",
-                "action" to "is_ajax_load_posts",
-                "page" to "1",
-                "security" to ajaxNonce
-            )
-        )
-
-        // Arama sonuçlarını parse ederiz.
-        val document = searchResponse.document
-
-        // ".thumbnail a" sınıfına sahip tüm öğeleri seçeriz.
-        val searchResults = document.select(".thumbnail a").mapNotNull { element ->
-            val movieUrl = element.attr("href")
-            // Filmin adını ve diğer bilgilerini almak için 'load' fonksiyonunu çağırırız.
-            val loadResponse = load(movieUrl) as? MovieLoadResponse
-
-            if (loadResponse != null) {
-                newMovieSearchResponse(
-                    name = loadResponse.name, // Yüklenen yanıttan adı alırız.
-                    url = movieUrl,
-                    type = TvType.Movie,
-                    posterUrl = loadResponse.posterUrl
-                )
-            } else {
-                null
-            }
-        }
-        return searchResults
-    }
-
-    /**
-     * Hızlı arama için search metodunu kullanır.
-     */
-    override suspend fun quickSearch(query: String): List<SearchResponse> {
-        return search(query)
-    }
-}
+]
