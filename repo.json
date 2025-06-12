@@ -1,8 +1,8 @@
 {
-    "name": "Saklimavi'nin Reposu",
+    "name": "Yetişkin Reposu",
     "description": "Türkçe Cloudstream eklentileri",
     "manifestVersion": 1,
     "pluginLists": [
-      "https://raw.githubusercontent.com/UmayTrade/UmayTv2/refs/heads/main/plugins.json"
+      "https://raw.githubusercontent.com/Sertel392/3ll3sm3/refs/heads/main/plugins.json"
     ]
 }
